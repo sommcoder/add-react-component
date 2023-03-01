@@ -1,6 +1,6 @@
 {
   "name": "add-react-fn-component",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "a lightweight module that allows you to quickly create a react component in your /src directory from the command-line by specifying the components name and HTML element. You can choose to create the component using styled-components boilerplate or an external css importing to the .jsx file. You must be in the /src directory to run the script",
   "main": "index.js",
   "type": "module",
