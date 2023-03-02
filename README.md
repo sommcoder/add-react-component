@@ -1,10 +1,10 @@
 # Add React Components Quickly
 
-A simple cli tool that allows a user to create React function component boiler-plate code through their terminal with three quick questions.
+A simple cli tool that allows developers to create React function component boiler-plate code through substantially increasing development speed.
 
 # Install
 
-npm install add-react-fn-component
+npm i add-react-fn-component --save-dev
 
 # Run
 
