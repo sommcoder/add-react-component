@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import inquirer from "inquirer";
-import fs from "fs";
-import { readFile } from "fs/promises";
-import process from "process";
+import fs from "node:fs";
+import { readFile } from "node:fs/promises";
+import process from "node:process";
 
 try {
   if (fs.existsSync("./src/components")) {
@@ -19,7 +19,6 @@ try {
       "ERROR: we were not able to locate a path of ./src or ../src or ./src/components or ../src/components and therefore cannot execute add-react-fn-component script. Please ensure one of the above paths in your project exists before retrying"
     );
   }
-
   const html = JSON.parse(
     await readFile(new URL("./html-lib.json", import.meta.url))
   );
@@ -31,6 +30,17 @@ try {
       );
     } else return true;
   }
+
+  console.log(fs.readdirSync("./src"));
+
+  // should return
+  // const getListofDirectories = function () {
+  //   console.log(fs.readdirSync("src", { withFileTypes: true }));
+  //   // .filter((dirent) => dirent.isDirectory())
+  //   // .map((dirent) => dirent.name)
+  //   // .shift("./src"); // include /src in the beginning of array
+  // };
+  // getListofDirectories();
 
   inquirer
     .prompt([
@@ -52,6 +62,13 @@ try {
         type: "list",
         suggestOnly: true,
       },
+      // {
+      //   name: "componentLocation",
+      //   message: "Where are you adding this component?:",
+      //   choices: [...getListofDirectories],
+      //   type: "list",
+      //   suggestOnly: true,
+      // },
     ])
     .then((answers) => {
       console.log("answers:", answers);
@@ -145,7 +162,7 @@ export default function ${answers.componentName}() {
     });
 } catch (error) {
   console.error(
-    "NO SRC:",
-    "not able to locate a /src directory in the current project"
+    "SCRIPT FAILED",
+    "Check that the contents of the try/catch is valid node.js"
   );
 }
