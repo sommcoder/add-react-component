@@ -23,13 +23,22 @@ npm run add
 
 # styled components:
 
-import styled from 'styled-components';
+`import styled from 'styled-components';
 
 export default function {ComponentName}() {
 return (
 <Styled{ComponentName}>
 </Styled{ComponentName}>  
  );
-}
+}`
 
 # external css:
+
+`import '{componentName}.css';
+
+export default function {componentName}() {
+return (
+<{componentName} className={{class-name}}>
+</{componentName}>  
+ );
+}`
