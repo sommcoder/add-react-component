@@ -5,90 +5,71 @@ import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import process from "node:process";
 
-try {
-  if (fs.existsSync("./src/components")) {
-    process.chdir("./src/components");
-  } else if (fs.existsSync("../src/components")) {
-    process.chdir("../src/components");
-  } else if (fs.existsSync("./src")) {
-    process.chdir("./src");
-  } else if (fs.existsSync("../src")) {
-    process.chdir("../src");
-  } else {
-    throw new Error(
-      "ERROR: we were not able to locate a path of ./src or ../src or ./src/components or ../src/components and therefore cannot execute add-react-fn-component script. Please ensure one of the above paths in your project exists before retrying"
-    );
-  }
-  const html = JSON.parse(
-    await readFile(new URL("./html-lib.json", import.meta.url))
+if (fs.existsSync("./src/components")) {
+  process.chdir("./src/components");
+} else if (fs.existsSync("../src/components")) {
+  process.chdir("../src/components");
+} else if (fs.existsSync("./src")) {
+  process.chdir("./src");
+} else if (fs.existsSync("../src")) {
+  process.chdir("../src");
+} else {
+  throw new Error(
+    "Not able to locate a path of ./src or ../src or ./src/components or ../src/components and therefore cannot execute add-react-fn-component script. Please ensure one of the above paths in your project exists before retrying"
   );
+}
+const html = JSON.parse(
+  await readFile(new URL("./html-lib.json", import.meta.url))
+);
 
-  function validatePascalCase(str) {
-    if (!str[0].match(/[A-Z]/)) {
-      throw new Error(
-        "The first word of your react component does not have a capitalized first letter and therefore is not PascalCase. Please adjust."
-      );
-    } else return true;
-  }
+function validatePascalCase(str) {
+  if (!str[0].match(/[A-Z]/)) {
+    throw new Error(
+      "The first word of your react component does not have a capitalized first letter and therefore is not PascalCase. Please adjust."
+    );
+  } else return true;
+}
 
-  console.log(fs.readdirSync("./src"));
+inquirer
+  .prompt([
+    {
+      name: "componentName",
+      message: "Enter React Component Name: ",
+      validate: validatePascalCase,
+    },
+    {
+      name: "componentType",
+      type: "input",
+      message: "Which HTML element will the component return?: ",
+      default: "div",
+    },
+    {
+      name: "cssOption",
+      message: "CSS or styled-components?: ",
+      choices: ["styled-components", "css", "neither"],
+      type: "list",
+      suggestOnly: true,
+    },
+  ])
+  .then((answers) => {
+    console.log("answers:", answers);
+    if (Object.hasOwn(html, answers.componentType)) {
+      if (answers.componentName.length === 0) {
+        console.log(
+          "You must specify a component name. Pascal Case is recommended for React components."
+        );
 
-  // should return
-  // const getListofDirectories = function () {
-  //   console.log(fs.readdirSync("src", { withFileTypes: true }));
-  //   // .filter((dirent) => dirent.isDirectory())
-  //   // .map((dirent) => dirent.name)
-  //   // .shift("./src"); // include /src in the beginning of array
-  // };
-  // getListofDirectories();
-
-  inquirer
-    .prompt([
-      {
-        name: "componentName",
-        message: "Enter React Component Name: ",
-        validate: validatePascalCase,
-      },
-      {
-        name: "componentType",
-        type: "input",
-        message: "Which HTML element will the component return?: ",
-        default: "div",
-      },
-      {
-        name: "cssOption",
-        message: "CSS or styled-components?: ",
-        choices: ["styled-components", "css", "neither"],
-        type: "list",
-        suggestOnly: true,
-      },
-      // {
-      //   name: "componentLocation",
-      //   message: "Where are you adding this component?:",
-      //   choices: [...getListofDirectories],
-      //   type: "list",
-      //   suggestOnly: true,
-      // },
-    ])
-    .then((answers) => {
-      console.log("answers:", answers);
-      if (Object.hasOwn(html, answers.componentType)) {
-        if (answers.componentName.length === 0) {
+        if (answers.componentType.length === 0) {
           console.log(
-            "You must specify a component name. Pascal Case is recommended for React components."
+            "You must specify a component Type. Standard HTML ONLY!."
           );
-
-          if (answers.componentType.length === 0) {
-            console.log(
-              "You must specify a component Type. Standard HTML ONLY!."
-            );
-          }
-        } else {
-          fs.mkdirSync(answers.componentName);
-          if (answers.cssOption === "styled-components") {
-            fs.writeFileSync(
-              `./${answers.componentName}/${answers.componentName}.jsx`,
-              `
+        }
+      } else {
+        fs.mkdirSync(answers.componentName);
+        if (answers.cssOption === "styled-components") {
+          fs.writeFileSync(
+            `./${answers.componentName}/${answers.componentName}.jsx`,
+            `
 import styled from 'styled-components';
               
 export default function ${answers.componentName}() {
@@ -100,69 +81,74 @@ export default function ${answers.componentName}() {
                       
 const Styled${answers.componentName} = styled.${answers.componentType}\`\`;
 `
-            );
-            console.log(
-              `Component ${answers.componentName} created successfully with styled-component boiler-plate!`
-            );
+          );
+          console.log(
+            `Component ${answers.componentName} created successfully with styled-component boiler-plate!`
+          );
+        }
+
+        if (answers.cssOption === "css") {
+          let className = "";
+
+          for (let i = 0; i < answers.componentName.length; i++) {
+            console.log("answers.componentName[i]:", answers.componentName[i]);
+            // is letter a capital?
+            if (answers.componentName[i].match(/[A-Z]/)) {
+              // if 1st char in str, no hyphen, else hyphen
+              i === 0
+                ? (className += answers.componentName[i])
+                : (className += "-" + answers.componentName[i]);
+            } else {
+              className += answers.componentName[i];
+            }
           }
 
-          if (answers.cssOption === "css") {
-            let className = "";
+          const finalClassName = className.toLowerCase();
 
-            for (let i = 0; i < answers.componentName.length; i++) {
-              console.log(
-                "answers.componentName[i]:",
-                answers.componentName[i]
-              );
-              // is letter a capital?
-              if (answers.componentName[i].match(/[A-Z]/)) {
-                // if 1st char in str, no hyphen, else hyphen
-                i === 0
-                  ? (className += answers.componentName[i])
-                  : (className += "-" + answers.componentName[i]);
-              } else {
-                className += answers.componentName[i];
-              }
-            }
+          console.log("className:", finalClassName);
+          console.log("finalClassName:", finalClassName);
 
-            const finalClassName = className.toLowerCase();
-
-            console.log("className:", finalClassName);
-            console.log("finalClassName:", finalClassName);
-
-            fs.writeFileSync(
-              `./${answers.componentName}/${answers.componentName}.css`,
-              `.${finalClassName} {
+          fs.writeFileSync(
+            `./${answers.componentName}/${answers.componentName}.css`,
+            `.${finalClassName} {
 display: visible;
 /* enter css here */
 }
 `
-            );
-            fs.writeFileSync(
-              `./${answers.componentName}/${answers.componentName}.jsx`,
-              `import '${answers.componentName}.css';
+          );
+          fs.writeFileSync(
+            `./${answers.componentName}/${answers.componentName}.jsx`,
+            `import '${answers.componentName}.css';
               
 export default function ${answers.componentName}() {
     return (
-    <${answers.componentName} className={${finalClassName}}>
+    <${answers.componentName} className="${finalClassName}">
     </${answers.componentName}>    
     );
 }
 `
-            );
-            console.log(
-              `Component ${answers.componentName} created successfully with css boiler-plate!`
-            );
-          }
+          );
+          console.log(
+            `Component ${answers.componentName} created successfully with css boiler-plate!`
+          );
         }
-      } else
-        throw new Error(
-          `the html element you entered: ${answers.componentType} is NOT VALID. Please check your spelling`
-        );
-    });
-} catch (error) {
-  console.error(
-    "SCRIPT FAILED",
-    "Check that the contents of the try/catch is valid node.js"
-  );
+        if (answers.cssOption === "neither") {
+          fs.writeFileSync(
+            `./${answers.componentName}/${answers.componentName}.jsx`,
+            `
+           
+export default function ${answers.componentName}() {
+    return (
+    <${answers.componentName}>
+    </${answers.componentName}>    
+    );
 }
+`
+          );
+        }
+      }
+    } else
+      throw new Error(
+        `the html element you entered: ${answers.componentType} is NOT VALID. Please check your spelling`
+      );
+  });

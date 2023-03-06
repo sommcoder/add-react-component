@@ -6,39 +6,68 @@ Since [React 17](https://stackoverflow.com/questions/71725865/do-i-need-to-impor
 
 # Install
 
+```
 npm i add-react-fn-component --save-dev
+```
 
 # Run
 
-npm run add
+```
+npm run add-component
+```
 
 # Follow The Prompts:
 
 1. Enter React Component Name (must be PascalCase)
 2. Which HTML element will the component return?
 3. CSS or styled-components?:
-4. Where are you adding this component?:
 
-# Example:
+# Folder Structure:
+
+If you have a /components directory within a /src directory component folders will be added to it, otherwise they will just be added to the /src directory as seen here:
+
+```
+|-src
+| |-ComponentName
+| | |-ComponentName.css
+| | |-ComponentName.jsx
+```
+
+# Examples:
 
 # styled components:
 
-`import styled from 'styled-components';
+```javascript
+import styled from 'styled-components;
 
-export default function {ComponentName}() {
-return (
-<Styled{ComponentName}>
-</Styled{ComponentName}>  
- );
-}`
+export default function ComponentName() {
+    return (
+    <ComponentName className="ClassName">
+    </ComponentName>
+    );
+}
+```
 
 # external css:
 
-`import '{componentName}.css';
+css file:
 
-export default function {componentName}() {
-return (
-<{componentName} className={{class-name}}>
-</{componentName}>  
- );
-}`
+```css
+.component-name {
+  display: visible;
+  /* enter css here */
+}
+```
+
+jsx file:
+
+```javascript
+import ComponentName.css;
+
+export default function ComponentName() {
+    return (
+    <ComponentName className="ClassName">
+    </ComponentName>
+    );
+}
+```
