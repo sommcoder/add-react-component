@@ -136,7 +136,6 @@ export default function ${answers.componentName}() {
           fs.writeFileSync(
             `./${answers.componentName}/${answers.componentName}.jsx`,
             `
-           
 export default function ${answers.componentName}() {
     return (
     <${answers.componentName}>
