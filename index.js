@@ -15,7 +15,7 @@ if (fs.existsSync("./src/components")) {
   process.chdir("../src");
 } else {
   throw new Error(
-    "Not able to locate a path of ./src or ../src or ./src/components or ../src/components and therefore cannot execute add-react-fn-component script. Please ensure one of the above paths in your project exists before retrying"
+    "Not able to locate a path of ./src, ../src, ./src/components or ../src/components and therefore cannot execute add-react-fn-component script. Please ensure one of the above paths in your project exists before retrying the script"
   );
 }
 const html = JSON.parse(
@@ -104,9 +104,6 @@ const Styled${answers.componentName} = styled.${answers.componentHTML}\`\`;
           }
 
           const finalClassName = className.toLowerCase();
-
-          console.log("className:", finalClassName);
-          console.log("finalClassName:", finalClassName);
 
           fs.writeFileSync(
             `./${answers.componentName}/${answers.componentName}.css`,
