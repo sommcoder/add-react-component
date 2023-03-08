@@ -38,7 +38,7 @@ inquirer
       validate: validatePascalCase,
     },
     {
-      name: "componentType",
+      name: "componentHTML",
       type: "input",
       message: "Which HTML element will the component return?: ",
       default: "div",
@@ -53,13 +53,13 @@ inquirer
   ])
   .then((answers) => {
     console.log("answers:", answers);
-    if (Object.hasOwn(html, answers.componentType)) {
+    if (Object.hasOwn(html, answers.componentHTML)) {
       if (answers.componentName.length === 0) {
         console.log(
           "You must specify a component name. Pascal Case is recommended for React components."
         );
 
-        if (answers.componentType.length === 0) {
+        if (answers.componentHTML.length === 0) {
           console.log(
             "You must specify a component Type. Standard HTML ONLY!."
           );
@@ -79,7 +79,7 @@ export default function ${answers.componentName}() {
     );
 }
                       
-const Styled${answers.componentName} = styled.${answers.componentType}\`\`;
+const Styled${answers.componentName} = styled.${answers.componentHTML}\`\`;
 `
           );
           console.log(
@@ -148,6 +148,6 @@ export default function ${answers.componentName}() {
       }
     } else
       throw new Error(
-        `the html element you entered: ${answers.componentType} is NOT VALID. Please check your spelling`
+        `the html element you entered: ${answers.componentHTML} is NOT VALID. Please check your spelling`
       );
   });

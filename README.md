@@ -38,14 +38,13 @@ If you have a /components directory within a /src directory component folders wi
 # styled components:
 
 ```javascript
-import styled from 'styled-components;
+import styled from "styled-components";
 
 export default function ComponentName() {
-    return (
-    <ComponentName className="ClassName">
-    </ComponentName>
-    );
+  return <ComponentName className="ClassName"></ComponentName>;
 }
+
+const StyledComponentName = styled.ComponentHTML``;
 ```
 
 # external css:
